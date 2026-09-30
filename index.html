@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#5b5ce2">
+<title>英语单词背诵本 · 32词</title>
+<style>
+:root{--p:#5b5ce2;--p2:#7a6ff0;--bg:#f5f6fb;--card:#fff;--text:#202236;--muted:#777b91;--ok:#20a66a;--bad:#e55353;--line:#e7e8f0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text)}
+.app{max-width:720px;margin:auto;min-height:100vh;padding-bottom:82px}
+header{background:linear-gradient(135deg,#5758df,#8175f2);color:#fff;padding:22px 18px 18px;border-radius:0 0 24px 24px;box-shadow:0 8px 24px #5b5ce233}
+h1{font-size:25px;margin:0 0 6px} .sub{opacity:.88;font-size:13px}
+.stats{display:flex;gap:9px;margin-top:16px} .stat{flex:1;background:#ffffff20;border:1px solid #ffffff28;border-radius:14px;padding:10px;text-align:center}
+.stat b{display:block;font-size:20px} .stat span{font-size:11px;opacity:.86}
+main{padding:16px}
+.section{display:none} .section.active{display:block}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mode{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 14px #25264a0a;cursor:pointer}
+.mode b{display:block;font-size:16px;margin-bottom:6px} .mode small{color:var(--muted);line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 8px 24px #25264a0d}
+.word{font-size:38px;font-weight:800;letter-spacing:.3px;text-align:center;margin-top:4px}
+.ipa{text-align:center;color:var(--p);font-size:17px;margin:8px 0}
+.cn{text-align:center;font-size:20px;margin:10px 0 16px;font-weight:650}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+button{border:0;border-radius:13px;padding:12px 16px;font-size:15px;background:#eeeef7;color:var(--text);cursor:pointer}
+button.primary{background:var(--p);color:white} button.ok{background:#e7f8f0;color:#168353} button.danger{background:#fff0f0;color:#c74343}
+.progress{height:8px;background:#ececf5;border-radius:10px;overflow:hidden;margin:14px 0 20px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--p),#9a8cff);width:0}
+.qnum{color:var(--muted);font-size:13px;margin-bottom:8px}
+.question{font-size:25px;font-weight:800;text-align:center;margin:18px 0}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:#f7f7fc;border:1px solid #e5e5ef;text-align:left}
+.opt.correct{background:#e9f9f0;border-color:#77d0a6;color:#17794e}
+.opt.wrong{background:#fff0f0;border-color:#ef9a9a;color:#ba3d3d}
+.input{width:100%;padding:15px;border:1px solid #dfe0ea;border-radius:14px;font-size:18px;outline:none}
+.input:focus{border-color:var(--p);box-shadow:0 0 0 3px #5b5ce21c}
+.hint{color:var(--muted);font-size:13px;line-height:1.6;margin-top:12px}
+.list{display:grid;gap:10px}
+.row{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px}
+.num{width:30px;height:30px;border-radius:10px;background:#efeffb;color:var(--p);display:grid;place-items:center;font-weight:700;font-size:12px}
+.row .w{font-weight:750;font-size:17px;flex:1} .row .m{color:var(--muted);font-size:13px}
+.iconbtn{padding:9px 11px;border-radius:11px}
+.canvasWrap{background:#fff;border:2px dashed #d8d9e7;border-radius:18px;padding:8px;margin-top:12px}
+canvas{display:block;width:100%;height:180px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 43px,#ececf3 44px);border-radius:12px;touch-action:none}
+.note{background:#f0f0ff;color:#4f50ba;border-radius:14px;padding:12px;font-size:13px;line-height:1.6;margin:12px 0}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5}
+.bottom-inner{width:100%;max-width:720px;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav{padding:11px 5px 10px;text-align:center;color:#888;font-size:11px;cursor:pointer}
+.nav.active{color:var(--p);font-weight:700} .nav div{font-size:20px;margin-bottom:2px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#222;color:#fff;padding:9px 14px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:10}
+.toast.show{opacity:.95}
+@media(max-width:380px){.word{font-size:33px}.mode-grid{gap:9px}main{padding:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>📚 英语单词背诵本</h1>
+  <div class="sub">课文完形填空 · 19—26题 · 共32个重点词</div>
+  <div class="stats">
+    <div class="stat"><b id="total">32</b><span>总词数</span></div>
+    <div class="stat"><b id="known">0</b><span>已掌握</span></div>
+    <div class="stat"><b id="score">0%</b><span>掌握率</span></div>
+  </div>
+</header>
+
+<main>
+<section id="home" class="section active">
+  <div class="note">建议顺序：①先听读+看中文 → ②英译中 → ③中译英 → ④最后用“书写练习”默写。每个词都可以点 🔊 听发音。</div>
+  <div class="mode-grid">
+    <div class="mode" onclick="show('flash')"><b>🃏 闪卡背诵</b><small>看单词、中文、音标，逐个记忆</small></div>
+    <div class="mode" onclick="show('en2cn')"><b>🇬🇧 英译中</b><small>看到英文，选择正确中文</small></div>
+    <div class="mode" onclick="show('cn2en')"><b>🇨🇳 中译英</b><small>看到中文，自己拼写英文</small></div>
+    <div class="mode" onclick="show('write')"><b>✍️ 书写练习</b><small>听/看目标单词，在横线上写</small></div>
+  </div>
+  <div style="height:14px"></div>
+  <button class="primary" style="width:100%" onclick="show('list')">📖 查看32个单词总表</button>
+</section>
+
+<section id="flash" class="section">
+  <div class="card">
+    <div class="qnum" id="flashNum">1 / 32</div><div class="progress"><i id="flashBar"></i></div>
+    <div class="word" id="flashWord"></div><div class="ipa" id="flashIpa"></div><div class="cn" id="flashCn"></div>
+    <div class="btns">
+      <button class="primary" onclick="speakCurrent()">🔊 听读音</button>
+      <button onclick="toggleCn()">👀 显示/隐藏中文</button>
+      <button class="ok" onclick="markKnown()">✓ 我会了</button>
+    </div>
+    <div style="height:12px"></div>
+    <div class="btns"><button onclick="flashPrev()">← 上一个</button><button onclick="flashNext()">下一个 →</button></div>
+  </div>
+</section>
+
+<section id="en2cn" class="section">
+  <div class="card">
+    <div class="qnum" id="e2cNum"></div><div class="progress"><i id="e2cBar"></i></div>
+    <div class="question" id="e2cQ"></div>
+    <div class="options" id="e2cOpts"></div>
+    <div class="hint" id="e2cHint"></div>
+  </div>
+</section>
+
+<section id="cn2en" class="section">
+  <div class="card">
+    <div class="qnum" id="c2eNum"></div><div class="progress"><i id="c2eBar"></i></div>
+    <div class="question" id="c2eQ"></div>
+    <input id="answer" class="input" autocomplete="off" autocapitalize="none" placeholder="请输入英文单词">
+    <div style="height:10px"></div>
+    <div class="btns"><button class="primary" onclick="checkAnswer()">检查</button><button onclick="speakQuestion()">🔊 听题</button></div>
+    <div class="hint" id="c2eHint">提示：不确定时先读中文，再回忆单词的首字母。</div>
+  </div>
+</section>
+
+<section id="write" class="section">
+  <div class="card">
+    <div class="qnum" id="writeNum"></div>
+    <div class="question" id="writeQ"></div>
+    <div class="hint">先看中文，想出英文，再在下面空白区域手写。写完后点“显示答案”自查。</div>
+    <div class="canvasWrap"><canvas id="pad"></canvas></div>
+    <div class="btns" style="margin-top:10px"><button onclick="clearPad()">清空</button><button onclick="showWriteAnswer()">👀 显示答案</button><button class="primary" onclick="nextWrite()">下一个</button></div>
+    <div id="writeAns" class="cn" style="display:none"></div>
+  </div>
+</section>
+
+<section id="list" class="section">
+  <div class="card" style="padding:15px">
+    <div class="qnum">19—26题全部选项 · 32词</div>
+    <div class="list" id="wordList"></div>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="bottom">
+ <div class="bottom-inner">
+  <div class="nav active" data-id="home" onclick="show('home')"><div>🏠</div>首页</div>
+  <div class="nav" data-id="flash" onclick="show('flash')"><div>🃏</div>背诵</div>
+  <div class="nav" data-id="en2cn" onclick="show('en2cn')"><div>🔤</div>测试</div>
+  <div class="nav" data-id="write" onclick="show('write')"><div>✍️</div>书写</div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const words = [{"word": "explained", "ipa": "/ɪkˈspleɪnd/", "cn": "解释；说明"}, {"word": "suggested", "ipa": "/səˈdʒestɪd/", "cn": "建议；暗示"}, {"word": "checked", "ipa": "/tʃekt/", "cn": "检查；核对"}, {"word": "wondered", "ipa": "/ˈwʌndərd/", "cn": "想知道；纳闷"}, {"word": "buy", "ipa": "/baɪ/", "cn": "买"}, {"word": "enjoy", "ipa": "/ɪnˈdʒɔɪ/", "cn": "享受；喜欢"}, {"word": "find", "ipa": "/faɪnd/", "cn": "找到；发现"}, {"word": "pass", "ipa": "/pæs/", "cn": "经过；通过"}, {"word": "moved", "ipa": "/muːvd/", "cn": "移动；搬动"}, {"word": "raced", "ipa": "/reɪst/", "cn": "飞奔；快速移动"}, {"word": "started", "ipa": "/ˈstɑːrtɪd/", "cn": "开始"}, {"word": "stopped", "ipa": "/stɑːpt/", "cn": "停止"}, {"word": "smile", "ipa": "/smaɪl/", "cn": "微笑"}, {"word": "worry", "ipa": "/ˈwɜːri/", "cn": "担心"}, {"word": "answer", "ipa": "/ˈænsər/", "cn": "回答；答案"}, {"word": "word", "ipa": "/wɜːrd/", "cn": "单词；话"}, {"word": "trouble", "ipa": "/ˈtrʌbəl/", "cn": "麻烦；困难"}, {"word": "pleasure", "ipa": "/ˈpleʒər/", "cn": "快乐；乐趣"}, {"word": "chance", "ipa": "/tʃæns/", "cn": "机会；可能性"}, {"word": "choice", "ipa": "/tʃɔɪs/", "cn": "选择"}, {"word": "burned", "ipa": "/bɜːrnd/", "cn": "燃烧；烧着"}, {"word": "warmed", "ipa": "/wɔːrmd/", "cn": "使温暖；变暖"}, {"word": "woke", "ipa": "/woʊk/", "cn": "醒来；唤醒"}, {"word": "lit", "ipa": "/lɪt/", "cn": "点燃；照亮"}, {"word": "ancient", "ipa": "/ˈeɪnʃənt/", "cn": "古老的；古代的"}, {"word": "strange", "ipa": "/streɪndʒ/", "cn": "奇怪的；陌生的"}, {"word": "short", "ipa": "/ʃɔːrt/", "cn": "短的；矮的"}, {"word": "slim", "ipa": "/slɪm/", "cn": "苗条的；纤细的"}, {"word": "warmth", "ipa": "/wɔːrmθ/", "cn": "温暖"}, {"word": "invitation", "ipa": "/ˌɪnvɪˈteɪʃən/", "cn": "邀请"}, {"word": "treasure", "ipa": "/ˈtreʒər/", "cn": "珍宝；宝藏"}, {"word": "friendship", "ipa": "/ˈfrendʃɪp/", "cn": "友谊"}];
+let fi=0,e2i=0,c2i=0,wi=0,known=new Set(), cnVisible=true, e2Answered=false;
+
+function show(id){
+ document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.id===id));
+ if(id==='flash') renderFlash();
+ if(id==='en2cn') renderE2C();
+ if(id==='cn2en') renderC2E();
+ if(id==='write') renderWrite();
+ if(id==='list') renderList();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function speak(text){
+ if(!('speechSynthesis' in window)) return toast('当前浏览器不支持语音朗读');
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=.78; u.pitch=1;
+ speechSynthesis.speak(u);
+}
+function speakCurrent(){speak(words[fi].word)}
+function speakQuestion(){speak(words[c2i].word)}
+function renderFlash(){
+ const x=words[fi]; document.getElementById('flashNum').textContent=`${fi+1} / ${words.length}`;
+ document.getElementById('flashBar').style.width=((fi+1)/words.length*100)+'%';
+ document.getElementById('flashWord').textContent=x.word; document.getElementById('flashIpa').textContent=x.ipa;
+ document.getElementById('flashCn').textContent=cnVisible?x.cn:'点击“显示/隐藏中文”查看';
+}
+function toggleCn(){cnVisible=!cnVisible;renderFlash()}
+function flashNext(){fi=(fi+1)%words.length;cnVisible=true;renderFlash()}
+function flashPrev(){fi=(fi-1+words.length)%words.length;cnVisible=true;renderFlash()}
+function markKnown(){known.add(words[fi].word);updateStats();toast('已标记为“会了” ✓');flashNext()}
+function updateStats(){document.getElementById('known').textContent=known.size;document.getElementById('score').textContent=Math.round(known.size/words.length*100)+'%'}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)}
+function shuffled(arr){return [...arr].sort(()=>Math.random()-.5)}
+function renderE2C(){
+ const x=words[e2i]; e2Answered=false;
+ document.getElementById('e2cNum').textContent=`第 ${e2i+1} / ${words.length} 题`;
+ document.getElementById('e2cBar').style.width=((e2i+1)/words.length*100)+'%';
+ document.getElementById('e2cQ').textContent=x.word;
+ const others=shuffled(words.filter(y=>y.word!==x.word)).slice(0,3);
+ const opts=shuffled([x,...others]);
+ const box=document.getElementById('e2cOpts'); box.innerHTML='';
+ opts.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.cn;b.onclick=()=>answerE2C(b,o.word===x.word,x.word);box.appendChild(b)});
+ document.getElementById('e2cHint').textContent='点 🔊 可听发音；选对后自动进入下一题。';
+}
+function answerE2C(btn,ok,word){
+ if(e2Answered)return;e2Answered=true;
+ btn.classList.add(ok?'correct':'wrong');
+ if(ok){known.add(word);updateStats();document.getElementById('e2cHint').textContent='✓ 正确！';}
+ else{document.getElementById('e2cHint').textContent='✗ 再记一下：'+words.find(x=>x.word===word).cn;}
+ setTimeout(()=>{e2i=(e2i+1)%words.length;renderE2C()},700);
+}
+function renderC2E(){
+ const x=words[c2i]; document.getElementById('c2eNum').textContent=`第 ${c2i+1} / ${words.length} 题`;
+ document.getElementById('c2eBar').style.width=((c2i+1)/words.length*100)+'%';
+ document.getElementById('c2eQ').textContent=x.cn; document.getElementById('answer').value='';
+ document.getElementById('c2eHint').textContent='提示：不确定时先读中文，再回忆单词的首字母。';
+}
+function checkAnswer(){
+ const x=words[c2i], v=document.getElementById('answer').value.trim().toLowerCase();
+ if(!v)return toast('先写一个答案哦');
+ if(v===x.word){known.add(x.word);updateStats();document.getElementById('c2eHint').textContent='✓ 正确！';setTimeout(()=>{c2i=(c2i+1)%words.length;renderC2E()},650)}
+ else document.getElementById('c2eHint').textContent='✗ 再想想，正确答案是：'+x.word;
+}
+document.getElementById('answer').addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer()});
+
+let ctx, drawing=false;
+function initCanvas(){
+ const c=document.getElementById('pad'); const dpr=devicePixelRatio||1; const r=c.getBoundingClientRect();
+ c.width=r.width*dpr;c.height=180*dpr;ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#25264a';
+ const pos=e=>{const p=e.touches?e.touches[0]:e;const rr=c.getBoundingClientRect();return [p.clientX-rr.left,p.clientY-rr.top]};
+ c.onpointerdown=e=>{drawing=true;const [x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y)};
+ c.onpointermove=e=>{if(!drawing)return;const [x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke()};
+ c.onpointerup=()=>drawing=false;c.onpointerleave=()=>drawing=false;
+}
+function renderWrite(){const x=words[wi];document.getElementById('writeNum').textContent=`第 ${wi+1} / ${words.length} 个`;document.getElementById('writeQ').textContent=x.cn;document.getElementById('writeAns').style.display='none';document.getElementById('writeAns').textContent='答案：'+x.word+'  '+x.ipa;setTimeout(initCanvas,30)}
+function clearPad(){if(ctx){const c=document.getElementById('pad');ctx.clearRect(0,0,c.width,c.height)}}
+function showWriteAnswer(){document.getElementById('writeAns').style.display='block';speak(words[wi].word)}
+function nextWrite(){wi=(wi+1)%words.length;renderWrite()}
+function renderList(){
+ const box=document.getElementById('wordList');box.innerHTML='';
+ words.forEach((x,i)=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<div class="num">${i+1}</div><div><div class="w">${x.word}</div><div class="m">${x.ipa} · ${x.cn}</div></div><button class="iconbtn" onclick="speak('${x.word}')">🔊</button>`;box.appendChild(r)})
+}
+renderFlash();renderList();updateStats();
+</script>
+</body>
+</html>
